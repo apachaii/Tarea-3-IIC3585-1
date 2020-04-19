@@ -1,0 +1,16 @@
+//find_upper_bound_possibility inputs the length of the set, and output a set of that length meant
+//to be used as upper bound with the highest number, and to find sets with lower ones.
+    //create the set and the structures to store the sums and multiplications
+    //for every element to be filled in the set
+        //try fill that element with a number (starting with the lowest)
+            //if the number is compatible the previous ones element
+                //add it to the set
+                //add the sums and multiplication to the structures
+            //else continue the next higher number
+
+// check_new_number_compatibility inputs the current products, the sums and multiplication
+// made with the new number. Outputs if is valid add the new number to the searched ones
+    // if there is an intersection between the new sums and the new multiplications or,
+    // between each of those and the current products
+        // return false
+    // return true
