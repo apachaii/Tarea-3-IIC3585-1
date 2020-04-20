@@ -42,6 +42,30 @@ function mergeSorted(a, b) {
 }
 const mergeAll = (...arrays) => arrays.reduce(mergeSorted);
 
+function removeSorted(a, b) {
+    let answer = new Array(a.length - b.length), i = 0, j = 0, k = 0;
+    while (i < a.length && j < b.length) {
+        if (a[i] === b[j]){
+            i++;
+            j++;
+        }
+        if (a[i] < b[j]) {
+            answer[k] = a[i];
+            i++;
+            k++;
+        }else {
+            j++;
+        }
+    }
+    while (i < a.length) {
+        answer[k] = a[i];
+        i++;
+        k++;
+    }
+    return answer;
+}
+const removeAll = (...arrays) => arrays.reduce(removeSorted);
+
 // check_new_number_compatibility inputs the current products, the sums and multiplication
 // made with the new number. Outputs if is valid add the new number to the searched ones
 function check_new_number_compatibility(
@@ -77,16 +101,16 @@ function find_upper_bound_possibility(set_length) {
 
             //if the number is compatible the previous ones element
             const sums = [...searched, current_number].map(number => number + current_number);
-            const multiplication = [...searched, current_number].map(number => number * current_number);
+            const multiplications = [...searched, current_number].map(number => number * current_number);
 
-            const is_valid = check_new_number_compatibility(products, sums, multiplication);
+            const is_valid = check_new_number_compatibility(products, sums, multiplications);
 
             if (is_valid) {
                 //add it to the set
                 searched.push(current_number);
 
                 //add the sums and multiplication to the structures
-                products = mergeAll(sums , multiplication, products);
+                products = mergeAll(sums , multiplications, products);
 
                 have_number_been_found = true;
             }
@@ -100,5 +124,103 @@ function find_upper_bound_possibility(set_length) {
     return searched;
 }
 
+// find_lower_bound inputs the length of the set and tries to approximate a lower bound, it can't be lower than
+// the approximation
+function find_lower_bound(length){
+    // best found is n*2-1
+    return length*2-1;
+}
 
-console.log(find_upper_bound_possibility(5));
+class Product_Store {
+    constructor(sums, multiplication) {
+        this.sums = sums;
+        this.multiplication = multiplication
+    }
+}
+
+// find_possible_set inputs a the end of a possible set, the product of that end,
+// and the length to which expand the set. Create a set of that length with that end
+// if is possible.
+// Assumes that the set_end and end_products are ordered from lower to higher
+function find_possible_set(set_end, end_products, final_length){
+
+    // create the structures to store the new possibility and products
+    const searched_length = final_length-set_end.length
+    const searched = Array(searched_length);
+    let products = [...end_products];
+
+    // create the structures to store the products added en each element
+    const stored_products = Array(searched_length);
+
+    // the first number searched is the lower number in the end -1
+    let searched_number = set_end[0]-1;
+
+    // while an structure wasn't found
+    let searched_index = searched_length-1;
+    while (searched_index >= 0){
+
+        // if the number is lower than the lower bound and is the first searched
+        const less_than_lower_bound = searched_number<find_lower_bound(searched_index+1);
+        if (less_than_lower_bound && searched_index === searched_length-1) {
+
+            // return is impossible order
+            return null;
+        }
+
+        // if the number is lower than the lower bound
+        if (less_than_lower_bound) {
+
+            // remove the previous one from the products
+            const previous_index = searched_index+1;
+            const previous_products_store = stored_products[previous_index];
+            const previous_products = mergeAll(
+                previous_products_store.sums,
+                previous_products_store.multiplication,
+                );
+            products = removeAll(products, previous_products)
+
+            // set searched number to the previous one -1
+            searched_number = searched[previous_index]-1;
+
+            // start searching from the previous one
+            searched_index = previous_index;
+        }
+
+        // if the number is compatible
+        const current_result = [searched_number, ...searched.slice(searched_index+1), ...set_end];
+
+        const sums = current_result.map(number => number + searched_number);
+        const multiplications = current_result.map(number => number * searched_number);
+
+        const is_valid = check_new_number_compatibility(products, sums, multiplications);
+
+        if (is_valid){
+            // add the number to the possible set
+            searched[searched_index] = searched_number;
+
+            // add the products
+            products = mergeAll(products, sums, multiplications);
+            stored_products[searched_index] = new Product_Store(sums, multiplications);
+
+            // pass to the next number in the set
+            searched_index--;
+        }
+
+        // decrease the searched number
+        searched_number--;
+    }
+
+    // return the found set
+    return searched;
+}
+
+for (let i = 10; i <= 20; i++) {
+    const current_upper = find_upper_bound_possibility(i);
+    const j = current_upper.slice(-1)[0];
+    for (let k = find_lower_bound(i); k <= j; k++) {
+        console.log(
+            find_possible_set([k], [k+k,k*k],i),k,i
+        )
+    }
+    console.log("\n\n")
+}

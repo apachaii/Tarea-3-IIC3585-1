@@ -14,3 +14,27 @@
     // between each of those and the current products
         // return false
     // return true
+
+// find_lower_bound inputs the length of the set and tries to approximate a lower bound, it can't be lower than
+// the approximation
+    // best found is n*2-1
+
+// find_possible_set inputs a the end of a possible set, the product of that end,
+// and the length to which expand the set. Create a set of that length with that end
+// if is possible.
+    // create the structures to store the new possibility and products
+    // create the structures to store the products added en each element
+    // the first number searched is the lower number in the end -1
+    // while an structure wasn't found
+        // if the number is lower than the lower bound and is the first searched
+            // return is impossible order
+        // if the number is lower than the lower bound
+            // remove the previous one from the products
+            // set searched number to the previous one -1
+            // start searching from the previous one
+        // if the number is compatible
+            // add the number to the possible set
+            // add the products
+            // pass to the next number in the set
+         // decrease the searched number
+    // return the found set
