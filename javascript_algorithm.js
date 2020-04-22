@@ -127,8 +127,8 @@ function find_upper_bound_possibility(set_length) {
 // find_lower_bound inputs the length of the set and tries to approximate a lower bound, it can't be lower than
 // the approximation
 function find_lower_bound(length){
-    // best found is n*2-1
-    return length*2-1;
+    // best found is n*(n+1)/1
+    return (length*(length+1))/2;
 }
 
 class Product_Store {
@@ -214,13 +214,54 @@ function find_possible_set(set_end, end_products, final_length){
     return searched;
 }
 
-for (let i = 10; i <= 20; i++) {
-    const current_upper = find_upper_bound_possibility(i);
-    const j = current_upper.slice(-1)[0];
-    for (let k = find_lower_bound(i); k <= j; k++) {
-        console.log(
-            find_possible_set([k], [k+k,k*k],i),k,i
-        )
+// find_best_set inputs the length of the set and outputs the
+// best set, the one with the lower highest number for that length
+function find_best_set(set_length) {
+
+    // create the structures to contain the set and the products
+    const searched_set = Array(set_length);
+    let searched_products = [];
+
+    // for every element to be filled in the set (more to less order)
+    for (let element_i = set_length-1; element_i >= 0; element_i--) {
+
+        // the starting number to search is the lower bound for the place
+        let search_number = find_lower_bound(element_i+1)
+
+        // while the lower element haven't been found
+        let hast_current_number_been_found = false;
+        while (!hast_current_number_been_found){
+
+            // try the current number
+            const current_set = [search_number,...searched_set.slice(element_i+1)];
+
+            const sums = current_set.map(number => number + search_number);
+            const multiplications = current_set.map(number => number * search_number);
+            const current_products = mergeAll(sums, multiplications, searched_products);
+
+            const found_set = find_possible_set(current_set,current_products,set_length)
+
+            // if it works
+            if (found_set){
+
+                // add the number to the set
+                searched_set[element_i] = search_number;
+
+                // add the sums and multiplications to the products
+                searched_products = current_products
+
+                // continue to the next number
+                hast_current_number_been_found = true;
+            }
+
+            // else increase the number of the search
+            search_number++;
+        }
     }
-    console.log("\n\n")
+
+    // return the set
+    return searched_set;
 }
+
+console.log(find_best_set(10));
+console.log([...find_possible_set([84],[84*2,84*84],10),84]);

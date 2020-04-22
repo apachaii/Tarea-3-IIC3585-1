@@ -38,3 +38,17 @@
             // pass to the next number in the set
          // decrease the searched number
     // return the found set
+
+// find_best_set inputs the length of the set and outputs the
+// best set, the one with the lower highest number for that length
+    // create the structures to contain the set and the products
+    // for every element to be filled in the set (more to less order)
+        // the starting number to search is the lower bound for the place
+        // while the lower element haven't been found
+            // try the current number
+            // if it works
+                // add the number to the set
+                // add the sums and multiplications to the products
+                // continue to the next number
+            // else increase the number of the search
+    // return the set
