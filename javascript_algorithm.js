@@ -22,7 +22,7 @@ function mergeSorted(a, b) {
         if (a[i] < b[j]) {
             answer[k] = a[i];
             i++;
-        }else {
+        } else {
             answer[k] = b[j];
             j++;
         }
@@ -40,20 +40,21 @@ function mergeSorted(a, b) {
     }
     return answer;
 }
+
 const mergeAll = (...arrays) => arrays.reduce(mergeSorted);
 
 function removeSorted(a, b) {
     let answer = new Array(a.length - b.length), i = 0, j = 0, k = 0;
     while (i < a.length && j < b.length) {
-        if (a[i] === b[j]){
+        if (a[i] === b[j]) {
             i++;
             j++;
         }
-        if (a[i] < b[j]) {
+        else if (a[i] < b[j]) {
             answer[k] = a[i];
             i++;
             k++;
-        }else {
+        } else {
             j++;
         }
     }
@@ -64,194 +65,320 @@ function removeSorted(a, b) {
     }
     return answer;
 }
+
 const removeAll = (...arrays) => arrays.reduce(removeSorted);
 
-// check_new_number_compatibility inputs the current products, the sums and multiplication
-// made with the new number. Outputs if is valid add the new number to the searched ones
 function check_new_number_compatibility(
-    current_products,
-    sums,
-    multiplications,
+    total_sums,
+    total_multiplications,
+    total_differences,
+    new_sums,
+    new_multiplications,
+    new_differences,
 ) {
-    // if there is an intersection between the new sums and the new multiplications or,
-    // between each of those and the current products
-    return !there_is_intersection(sums, multiplications) &&
-        !there_is_intersection(current_products, sums) &&
-        !there_is_intersection(current_products, multiplications);
+    // Intersections between new sums and total sums are unnecessary due to manage difference
+    return !there_is_intersection(new_sums, new_multiplications) &&
+        !there_is_intersection(total_multiplications, new_sums) &&
+        !there_is_intersection(total_multiplications, new_multiplications) &&
+        !there_is_intersection(total_sums, new_multiplications) &&
+        !there_is_intersection(total_differences, new_differences);
 }
 
-//find_upper_bound_possibility inputs the length of the set, and output a set of that length meant
-//to be used as upper bound with the highest number, and to find sets with lower ones.
-function find_upper_bound_possibility(set_length) {
-
-    //create the set and the structures to store the sums and multiplications
-    const searched = Array();
-    let products = Array();
-
-    //for every element to be filled in the set
-    for (let set_i = 0; set_i < set_length; set_i++) {
-
-        //try fill that element with a number (starting with the lowest)
-        let current_number = 1;
-        if (set_i !== 0) {
-            current_number = searched[set_i - 1];
-        }
-        let have_number_been_found = false;
-        while (!have_number_been_found) {
-
-            //if the number is compatible the previous ones element
-            const sums = [...searched, current_number].map(number => number + current_number);
-            const multiplications = [...searched, current_number].map(number => number * current_number);
-
-            const is_valid = check_new_number_compatibility(products, sums, multiplications);
-
-            if (is_valid) {
-                //add it to the set
-                searched.push(current_number);
-
-                //add the sums and multiplication to the structures
-                products = mergeAll(sums , multiplications, products);
-
-                have_number_been_found = true;
-            }
-            //else continue the next higher number
-            else {
-                current_number++;
-            }
-        }
-    }
-
-    return searched;
-}
 
 // find_lower_bound inputs the length of the set and tries to approximate a lower bound, it can't be lower than
 // the approximation
-function find_lower_bound(length){
+function find_lower_bound(length) {
     // best found is n*(n+1)/1
-    return (length*(length+1))/2;
+    return (length * (length + 1)) / 2;
 }
 
 class Product_Store {
-    constructor(sums, multiplication) {
+    constructor(sums, multiplication, differences_report) {
         this.sums = sums;
-        this.multiplication = multiplication
+        this.multiplication = multiplication;
+        this.differences_report = differences_report;
     }
 }
 
-// find_possible_set inputs a the end of a possible set, the product of that end,
-// and the length to which expand the set. Create a set of that length with that end
-// if is possible.
-// Assumes that the set_end and end_products are ordered from lower to higher
-function find_possible_set(set_end, end_products, final_length){
+class difference_report {
+    constructor(differences, previous_first_gap = 0) {
+        this.differences = differences;
 
-    // create the structures to store the new possibility and products
-    const searched_length = final_length-set_end.length
-    const searched = Array(searched_length);
-    let products = [...end_products];
+        // where in the differences there is a gap between the current value, and the
+        // next value. If is -1 then the differences doesn't start with 0
+        this.first_gap = null;
 
-    // create the structures to store the products added en each element
+        this.find_first_gap(previous_first_gap);
+
+        this.current_difference = null;
+    }
+
+    find_first_gap(previous_first_gap){
+        // if there are no differences or the first difference isn't 1 then the first gap is -1;
+        const current_length = this.differences.length;
+        if (current_length === 0 || this.differences[0]!==1){
+            this.gap = -1;
+            this.first_gap = -1;
+            return;
+        }
+
+        this.gap = previous_first_gap===-1 ? 0 : previous_first_gap;
+        this.find_next_gap(true);
+        this.first_gap = this.gap
+    }
+
+    find_next_gap(inclusive=false) {
+        const current_length = this.differences.length;
+        const find_start = this.gap + (inclusive ? 0 : 1)
+        for (let difference_i = find_start; difference_i < current_length-1; difference_i++) {
+
+            // if the current difference isn't continue with the next then is the current first gap
+            const current_difference = this.differences[difference_i];
+            const next_difference = this.differences[difference_i+1];
+            if (current_difference+1 !== next_difference){
+                this.gap = difference_i;
+                return;
+            }
+        }
+
+        // if were all continuous then the first gap is the amount of the differences
+        this.gap = current_length-1;
+    }
+
+    find_next_available_difference() {
+        // if a current difference does not exist start it
+        if (!this.current_difference){
+            // if the gap is -1 then starts at 1
+            if (this.gap === -1){
+                this.current_difference = 1;
+            }
+            // if the gap is between 1 and the amount of difference
+            else if (this.gap < this.differences.length-1) {
+                // start it at the start of the gap +1
+                this.current_difference = this.differences[this.gap]+1;
+            }
+            // else start at the end of differences +1
+            else{
+                this.current_difference =this.differences.slice(-1)[0]+1;
+            }
+        }
+        // else exist
+        else {
+            // increase the current difference by 1
+            this.current_difference++;
+
+            // if the gap is not the final
+            if (this.gap !== this.differences.length-1){
+
+                // if reach the end of the gap
+                if (this.current_difference === this.differences[this.gap+1]){
+
+                    // get the next gap
+                    this.find_next_gap();
+
+                    // if is the last one then the difference is the last one +1
+                    if (this.gap !== this.differences.length-1){
+                        this.current_difference =this.differences.slice(-1)[0]+1;
+                    }
+                    // else is the start of the gap +1
+                    else {
+                        this.current_difference = this.differences[this.gap]+1;
+                    }
+                }
+            }
+        }
+
+        // return the difference
+        return this.current_difference;
+    }
+}
+
+
+// find_possible_set inputs a the end of a possible set which is assume is correct,
+// the sums generated by of that end, the multiplications generated by of that end,
+// the differences between each element of the set, and the length to which expand the set.
+// It creates a set of that length with that end if is possible.
+function find_possible_set(set_end, end_sums, end_multiplications, end_differences, final_length) {
+
+    // create the structures to store the new possibility, sums, multiplications, and differences
+    const searched_length = final_length - set_end.length
+    const searched_set = Array(searched_length);
+
+    let total_sums = [...end_sums];
+    let total_multiplications = [...end_multiplications];
+    let total_differences = [...end_differences];
+
+    // create the structures to store the sums, multiplications and differences added en each element
     const stored_products = Array(searched_length);
 
-    // the first number searched is the lower number in the end -1
-    let searched_number = set_end[0]-1;
+    // the first number searched is the lower number in the end - the lowest difference
+    let current_difference_report = new difference_report(total_differences);
+    let current_difference = current_difference_report.find_next_available_difference();
+
+    let previous_number = set_end[0];
+    let searched_number = previous_number - current_difference;
 
     // while an structure wasn't found
-    let searched_index = searched_length-1;
-    while (searched_index >= 0){
+    let searched_index = searched_length - 1;
+    while (searched_index >= 0) {
+        // console.log(`Index:${searched_index} Searched: ${searched_number} Previous: ${previous_number} Difference: ${current_difference} `);
 
         // if the number is lower than the lower bound and is the first searched
-        const less_than_lower_bound = searched_number<find_lower_bound(searched_index+1);
-        if (less_than_lower_bound && searched_index === searched_length-1) {
+        const lower_bound = find_lower_bound(searched_index + 1);
+        const is_less_than_lower_bound = searched_number < lower_bound;
+        if (is_less_than_lower_bound && searched_index === searched_length - 1) {
 
             // return is impossible order
             return null;
         }
 
         // if the number is lower than the lower bound
-        if (less_than_lower_bound) {
+        if (is_less_than_lower_bound) {
 
-            // remove the previous one from the products
-            const previous_index = searched_index+1;
+            // remove the previous one from the sums, multiplications and differences
+            const previous_index = searched_index + 1;
             const previous_products_store = stored_products[previous_index];
-            const previous_products = mergeAll(
-                previous_products_store.sums,
-                previous_products_store.multiplication,
-                );
-            products = removeAll(products, previous_products)
 
-            // set searched number to the previous one -1
-            searched_number = searched[previous_index]-1;
+            total_sums = removeAll(total_sums, previous_products_store.sums);
+            total_multiplications = removeAll(total_multiplications, previous_products_store.multiplication);
+
+            current_difference_report = previous_products_store.differences_report
+            total_differences = current_difference_report.differences;
 
             // start searching from the previous one
             searched_index = previous_index;
+            if (searched_index === searched_length - 1){
+                previous_number = set_end[0];
+            } else {
+                previous_number = searched_set[searched_index+1];
+            }
+            current_difference = current_difference_report.find_next_available_difference()
+            searched_number = previous_number - current_difference;
         }
 
-        // if the number is compatible
-        const current_result = [searched_number, ...searched.slice(searched_index+1), ...set_end];
+        // else process the number
+        else {
 
-        const sums = current_result.map(number => number + searched_number);
-        const multiplications = current_result.map(number => number * searched_number);
+            // if the number is 2 then it doesn't work
+            if (searched_number === 2) {
 
-        const is_valid = check_new_number_compatibility(products, sums, multiplications);
+                // decrease the searched number by the lowest possible difference
+                current_difference = current_difference_report.find_next_available_difference();
+                searched_number = previous_number - current_difference;
+                continue;
+            }
 
-        if (is_valid){
-            // add the number to the possible set
-            searched[searched_index] = searched_number;
+            // if the number is compatible
+            const current_result = [searched_number, ...searched_set.slice(searched_index + 1), ...set_end];
 
-            // add the products
-            products = mergeAll(products, sums, multiplications);
-            stored_products[searched_index] = new Product_Store(sums, multiplications);
+            const sums = current_result.map(number => number + searched_number);
+            const multiplications = current_result.map(number => number * searched_number);
+            const differences = current_result.slice(1).map(number => number - searched_number);
 
-            // pass to the next number in the set
-            searched_index--;
+            const is_valid = check_new_number_compatibility(
+                total_sums,
+                total_multiplications,
+                total_differences,
+                sums,
+                multiplications,
+                differences,
+            );
+
+            if (is_valid) {
+
+                // add the number to the possible set
+                searched_set[searched_index] = searched_number;
+
+                // add the sums, multiplications and differences
+                total_sums = mergeAll(total_sums, sums);
+                total_multiplications = mergeAll(total_multiplications, multiplications);
+                total_differences = mergeAll(total_differences, differences);
+
+                stored_products[searched_index] = new Product_Store(sums, multiplications, current_difference_report);
+                current_difference_report = new difference_report(total_differences, current_difference_report.first_gap);
+
+                // pass to the next number in the set
+                searched_index--;
+                previous_number = searched_number;
+            }
+            // decrease the searched number by the lowest possible difference
+            current_difference = current_difference_report.find_next_available_difference();
+            searched_number = previous_number - current_difference;
         }
-
-        // decrease the searched number
-        searched_number--;
     }
 
     // return the found set
-    return searched;
+    return searched_set;
 }
 
 // find_best_set inputs the length of the set and outputs the
 // best set, the one with the lower highest number for that length
-function find_best_set(set_length) {
+function find_best_set(set_length, only_first = true) {
 
     // create the structures to contain the set and the products
     const searched_set = Array(set_length);
-    let searched_products = [];
+    let searched_sums = [];
+    let searched_multiplications = [];
+    let searched_differences = [];
 
     // for every element to be filled in the set (more to less order)
-    for (let element_i = set_length-1; element_i >= 0; element_i--) {
+    for (let element_i = set_length - 1; element_i >= 0; element_i--) {
 
         // the starting number to search is the lower bound for the place
-        let search_number = find_lower_bound(element_i+1)
+        let search_number = find_lower_bound(element_i + 1);
 
         // while the lower element haven't been found
-        let hast_current_number_been_found = false;
-        while (!hast_current_number_been_found){
+        while (!searched_set[element_i]) {
 
             // try the current number
-            const current_set = [search_number,...searched_set.slice(element_i+1)];
+            const current_set = [search_number, ...searched_set.slice(element_i + 1)];
 
             const sums = current_set.map(number => number + search_number);
             const multiplications = current_set.map(number => number * search_number);
-            const current_products = mergeAll(sums, multiplications, searched_products);
+            const differences = current_set.slice(1).map(number => number - search_number);
 
-            const found_set = find_possible_set(current_set,current_products,set_length)
+            const is_incompatible = !check_new_number_compatibility(
+                searched_sums,
+                searched_multiplications,
+                searched_differences,
+                sums,
+                multiplications,
+                differences,
+            );
+            if (is_incompatible){
+                search_number++;
+                continue;
+            }
+
+            const current_sums = mergeAll(sums, searched_sums);
+            const current_multiplications = mergeAll(multiplications, searched_multiplications);
+            const current_differences = mergeAll(differences, searched_differences);
+
+
+            const found_set = find_possible_set(
+                current_set,
+                current_sums,
+                current_multiplications,
+                current_differences,
+                set_length
+            );
 
             // if it works
-            if (found_set){
+            if (found_set) {
+
+                if (only_first){
+                    return [...found_set, search_number];
+                }
 
                 // add the number to the set
                 searched_set[element_i] = search_number;
 
                 // add the sums and multiplications to the products
-                searched_products = current_products
+                searched_sums = current_sums;
+                searched_multiplications = current_multiplications;
+                searched_differences = current_differences;
 
                 // continue to the next number
-                hast_current_number_been_found = true;
             }
 
             // else increase the number of the search
@@ -263,5 +390,74 @@ function find_best_set(set_length) {
     return searched_set;
 }
 
-console.log(find_best_set(10));
-console.log([...find_possible_set([84],[84*2,84*84],10),84]);
+/*
+// Here on is for testing
+function find_duplicate_in_array(arra1) {
+    var object = {};
+    var result = [];
+
+    arra1.forEach(function (item) {
+        if(!object[item])
+            object[item] = 0;
+        object[item] += 1;
+    })
+
+    for (var prop in object) {
+        if(object[prop] >= 2) {
+            result.push(prop);
+        }
+    }
+
+    return result;
+
+}
+
+// const cosa1=find_best_set(11);
+const cosa1=[ 5, 12, 17, 21, 27, 38, 40 ];
+console.log(cosa1);
+
+let s = [];
+let m = [];
+for (let i = 0; i < cosa1.length; i++) {
+
+    for (let j = i; j < cosa1.length; j++) {
+        const one = cosa1[i];
+        const two = cosa1[j];
+
+        s.push(one+two);
+        m.push(one*two);
+    }
+    s.sort((a,b)=>a-b)
+    m.sort((a,b)=>a-b);
+}
+console.log(find_duplicate_in_array(mergeAll(s,m)));
+*/
+/*
+console.time('someFunction')
+
+for (let i = 1; i <= 10; i++) {
+    console.log(find_best_set(i));
+}
+
+console.timeEnd('someFunction')*/
+
+/*for (let i = 30; i <= 50; i++) {
+    console.log(find_possible_set([i],[i*2],[i*i],[],8));
+}*/
+
+
+console.time('someFunction')
+
+for (let i = 1; i <= 10; i++) {
+    console.log(find_best_set(i));
+}
+
+console.timeEnd('someFunction')
+
+console.time('someFunction')
+
+for (let i = 1; i <= 10; i++) {
+    console.log(find_best_set(i, false));
+}
+
+console.timeEnd('someFunction')
