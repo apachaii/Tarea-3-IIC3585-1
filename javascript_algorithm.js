@@ -150,7 +150,7 @@ class difference_report {
         this.current_difference = null;
     }
 
-    find_first_gap(previous_first_gap) {
+    find_first_gap(previous_gap) {
         // if there are no differences or the first difference isn't 1 then the first gap is -1;
         const current_length = this.differences.length;
         if (current_length === 0 || this.differences[0] !== 1) {
@@ -159,7 +159,7 @@ class difference_report {
             return;
         }
 
-        this.gap = previous_first_gap === -1 ? 0 : previous_first_gap;
+        this.gap = previous_gap === -1 ? 0 : previous_gap;
         this.find_next_gap(true);
         this.first_gap = this.gap
     }
@@ -185,15 +185,18 @@ class difference_report {
     find_next_available_difference() {
         // if a current difference does not exist start it
         if (!this.current_difference) {
-            // if the gap is -1 then starts at 1
+
+            // if there are no gaps then starts at 1
             if (this.gap === -1) {
                 this.current_difference = 1;
             }
+
             // if the gap is between 1 and the amount of difference
             else if (this.gap < this.differences.length - 1) {
                 // start it at the start of the gap +1
                 this.current_difference = this.differences[this.gap] + 1;
             }
+
             // else start at the end of differences +1
             else {
                 this.current_difference = this.differences.slice(-1)[0] + 1;
@@ -201,6 +204,7 @@ class difference_report {
         }
         // else exist
         else {
+
             // increase the current difference by 1
             this.current_difference++;
 
@@ -217,6 +221,7 @@ class difference_report {
                     if (this.gap !== this.differences.length - 1) {
                         this.current_difference = this.differences.slice(-1)[0] + 1;
                     }
+
                     // else is the start of the gap +1
                     else {
                         this.current_difference = this.differences[this.gap] + 1;
@@ -237,7 +242,7 @@ class difference_report {
 function find_possible_set(set_end, end_sums, end_multiplications, end_differences, final_length) {
 
     // create the structures to store the new possibility, sums, multiplications, and differences
-    const searched_length = final_length - set_end.length
+    const searched_length = final_length - set_end.length;
     const searched_set = Array(searched_length);
 
     let total_sums = [...end_sums];
@@ -343,6 +348,7 @@ function find_possible_set(set_end, end_sums, end_multiplications, end_differenc
                 // set the new lower bound
                 lower_bound = find_lower_bound_difference(searched_index, total_differences);
             }
+
             // decrease the searched number by the lowest possible difference
             current_difference = current_difference_report.find_next_available_difference();
             searched_number = previous_number - current_difference;
@@ -572,11 +578,10 @@ console.log(find_best_set(12, false));
 const found_set = find_possible_set(tested_set, s, m, d, 12);
 console.log([...found_set, ...tested_set]);
 */
-/*
+
 for (let i = 1; i <= 11; i++) {
     console.time('someFunction');
     console.log(find_best_set(i, false));
     console.timeEnd('someFunction');
-}*/
-
+}
 // console.log(find_best_set(10));
