@@ -579,7 +579,7 @@ const found_set = find_possible_set(tested_set, s, m, d, 12);
 console.log([...found_set, ...tested_set]);
 */
 
-console.log(find_best_set(5));
+console.log(find_best_set(3));
 /*for (let i = 1; i <= 11; i++) {
     console.time('someFunction');
     console.log(find_best_set(i, false));
