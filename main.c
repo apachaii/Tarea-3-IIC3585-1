@@ -263,7 +263,7 @@ uint_fast32_t find_next_available_difference(difference_report *current_report) 
                 find_next_gap(current_report, false);
 
                 // if is the last one then the difference is the last one +1
-                if (current_report->gap != current_report->differences_length - 1) {
+                if (current_report->gap == current_report->differences_length - 1) {
                     current_report->current_difference =
                             current_report->differences[current_report->differences_length - 1] + 1;
                 }
@@ -303,7 +303,7 @@ static inline void free_stored_products(product_store *stored_products, const ui
 // the differences between each element of the set, and the length to which expand the set.
 // It creates a set of that length with that end if is possible.
 void find_possible_set(
-        possible_set_report report,
+        possible_set_report* report,
         const uint_fast16_t *set_end,
         uint_fast32_t *end_sums,
         uint_fast32_t *end_multiplications,
@@ -311,7 +311,7 @@ void find_possible_set(
         uint_fast16_t ending_part_length,
         uint_fast16_t final_length
 ) {
-    report.possible_set_found = false;
+    report->possible_set_found = false;
 
     // create the structures to store the new possibility, sums, multiplications, and differences
     const uint_fast16_t searched_length = final_length - ending_part_length;
@@ -349,26 +349,27 @@ void find_possible_set(
         uint_fast32_t *sums = malloc(current_product_length * sizeof(uint_fast32_t));
         uint_fast32_t *multiplications = malloc(current_product_length * sizeof(uint_fast32_t));
 
-        uint_fast32_t current_difference_length = final_length - store_i - 1;
+        uint_fast32_t current_difference_length = differences_length[store_i];
         uint_fast32_t *differences = calloc(current_difference_length, sizeof(uint_fast32_t));
 
         current_store->sums = sums;
         current_store->multiplications = multiplications;
         current_store->differences.differences = differences;
-        current_store->differences.differences_length = differences_length[store_i];
+        current_store->differences.differences_length = current_difference_length;
         current_store->differences.difference_found = false;
     }
 
     // the first number searched is the lower number in the end - the lowest difference
     difference_report *current_difference_report = &stored_products[searched_length - 1].differences;
+    copy_array(total_differences, current_difference_report->differences, start_differences_length);
     find_first_gap(current_difference_report, false, 0);
     uint_fast32_t current_difference = find_next_available_difference(current_difference_report);
 
     uint_fast32_t previous_number = set_end[0];
-    uint_fast32_t searched_number = previous_number - current_difference;
+    int_fast64_t searched_number = previous_number - current_difference;
 
     // get the starting lower bound
-    uint_fast32_t lower_bound = find_lower_bound_difference(
+    int_fast64_t lower_bound = find_lower_bound_difference(
             searched_length - 1,
             total_differences,
             start_differences_length);
@@ -376,6 +377,7 @@ void find_possible_set(
     // while an structure wasn't found
     int_fast64_t searched_index = searched_length - 1;
     while (searched_index >= 0) {
+        // printf("index: %" PRIdFAST64", number: %" PRIdFAST64"\n",searched_index,searched_number);
 
         // if the number is lower than the lower bound and is the first searched
         const bool is_less_than_lower_bound = searched_number < 1 + lower_bound;
@@ -410,7 +412,7 @@ void find_possible_set(
                              previous_products_added_length, total_multiplications);
 
                 current_difference_report = &previous_products_store->differences;
-                copy_array(current_difference_report->differences, total_multiplications,
+                copy_array(current_difference_report->differences, total_differences,
                            current_difference_report->differences_length);
             }
 
@@ -553,9 +555,146 @@ void find_possible_set(
     // return the found set
     free_stored_products(stored_products, searched_length);
     for (uint_fast32_t searched_i = 0; searched_i < searched_length; ++searched_i) {
-        report.possible_set[searched_i] = searched_set[searched_i];
+        report->possible_set[searched_i] = searched_set[searched_i];
     }
-    report.possible_set_found = true;
+    report->possible_set_found = true;
+}
+
+
+// find_best_set inputs the length of the set and outputs the
+// best set, the one with the lower highest number for that length
+uint_fast32_t *find_best_set(uint_fast16_t set_length, bool only_first) {
+
+    // create the structures to contain the set, the sums, and the differences
+    uint_fast32_t *searched_set = calloc(set_length , sizeof(uint_fast32_t));
+
+    const uint_fast16_t products_max_length = set_length * (set_length + 1) / 2;
+    uint_fast32_t stored_sums[products_max_length];
+    uint_fast32_t stored_multiplications[products_max_length];
+
+    const uint_fast16_t differences_max_length = set_length * (set_length - 1) / 2;
+    uint_fast32_t stored_differences[differences_max_length];
+
+
+    // for every element to be filled in the set (more to less order)
+    uint_fast32_t amount_of_differences = 0;
+    uint_fast32_t amount_of_products = 0;
+    for (int_fast32_t element_i = set_length - 1; element_i >= 0; element_i--) {
+
+        // the starting number to search is the lower bound for the place
+        uint_fast32_t searched_number =
+                1 + find_lower_bound_difference(element_i, stored_differences, amount_of_differences);
+
+        // while the lower element haven't been found
+        uint_fast16_t current_set_length = set_length-element_i;
+        uint_fast32_t current_set[current_set_length];
+        for (uint_fast16_t current_element_i = 1; current_element_i < current_set_length; ++current_element_i) {
+            uint_fast16_t added_element_index = element_i + 1 + current_element_i - 1;
+            uint_fast32_t added_element = searched_set[added_element_index];
+            current_set[current_element_i] = added_element;
+        }
+        while (searched_set[element_i] == 0) {
+
+            // try the current number
+            current_set[0] = searched_number;
+
+            uint_fast32_t product_length = set_length - element_i;
+
+            uint_fast32_t sums[product_length];
+            uint_fast32_t multiplication[product_length];
+            uint_fast32_t differences[product_length - 1];
+            {
+                for (uint_fast32_t result_i = 0; result_i < product_length; ++result_i) {
+                    const uint_fast32_t set_element = current_set[result_i];
+                    sums[result_i] = set_element + searched_number;
+                    multiplication[result_i] = set_element * searched_number;
+                }
+                for (uint_fast32_t result_i = 1; result_i < product_length; ++result_i) {
+                    const uint_fast32_t set_element = current_set[result_i];
+                    differences[result_i - 1] = set_element - searched_number;
+                }
+            }
+
+            const bool is_incompatible = !check_new_number_compatibility(
+                    stored_sums,
+                    stored_multiplications,
+                    stored_differences,
+                    amount_of_products,
+                    amount_of_differences,
+                    sums,
+                    multiplication,
+                    differences,
+                    product_length,
+                    product_length - 1
+            );
+
+            if (is_incompatible) {
+                searched_number++;
+                continue;
+            }
+
+            uint_fast32_t current_sums[amount_of_products + product_length];
+            uint_fast32_t current_multiplications[amount_of_products + product_length];
+            uint_fast32_t current_differences[amount_of_differences + product_length - 1];
+            mergeArrays(stored_sums, sums, amount_of_products, product_length, current_sums);
+            mergeArrays(stored_multiplications, multiplication, amount_of_products, product_length,
+                        current_multiplications);
+            mergeArrays(stored_differences, differences, amount_of_differences, product_length - 1,
+                        current_differences);
+
+            uint_fast32_t possible_set[set_length];
+            possible_set_report current_search_report = {
+                    .possible_set = possible_set,
+                    .possible_set_found = false,
+            };
+
+            if (element_i != 0){
+                find_possible_set(
+                        &current_search_report,
+                        current_set,
+                        current_sums,
+                        current_multiplications,
+                        current_differences,
+                        set_length-element_i,
+                        set_length
+                );
+            } else {
+                current_search_report.possible_set[0] = searched_number;
+                current_search_report.possible_set_found = true;
+            }
+
+            // if it works
+            if (current_search_report.possible_set_found) {
+
+                if (only_first) {
+                    for (uint_fast16_t found_i = 0; found_i < set_length; ++found_i) {
+                        const uint_fast32_t found_element = current_search_report.possible_set[found_i];
+                        searched_set[found_i] = found_element;
+                    }
+                    return searched_set;
+                }
+
+                // add the number to the set
+                searched_set[element_i] = searched_number;
+
+                // add the sums, multiplications and differences to the products
+                amount_of_products += product_length;
+                amount_of_differences += product_length-1;
+
+                copy_array(current_sums, stored_sums, amount_of_products);
+                copy_array(current_multiplications, stored_multiplications, amount_of_products);
+                copy_array(current_differences, stored_differences, amount_of_differences);
+
+                // continue to the next number
+            }
+
+            // else increase the number of the search
+            searched_number++;
+        }
+    }
+
+    // return the set
+    return searched_set;
 }
 
 
@@ -565,27 +704,45 @@ void find_possible_set(
 int main() {
     printf("Hello, World!\n");
 
+    /*
     possible_set_report report = {
             .possible_set_found=false,
-            .possible_set=(uint_fast16_t[5]) {0, 0, 0, 0, 0},
+            .possible_set=(uint_fast16_t[7]) {0, 0, 0, 0, 0, 0, 0},
     };
-    uint_fast16_t set_end[2] = {9, 10};
-    uint_fast32_t end_sums[3] = {18, 19, 20};
-    uint_fast32_t end_multiplications[3] = {81, 90, 100};
+    uint_fast16_t set_end[2] = {31, 32};
+    uint_fast32_t end_sums[3] = {31*2, 31+32, 32*2};
+    uint_fast32_t end_multiplications[3] = {31*31, 31*32, 32*32};
     uint_fast32_t end_differences[1] = {1};
     uint_fast16_t end_length = 2;
-    uint_fast16_t final_length = 4;
+    uint_fast16_t final_length = 7;
 
     find_possible_set(
-            report,
+            &report,
             set_end,
             end_sums,
             end_multiplications,
             end_differences,
             end_length,
             final_length
-    );
+    );*/
 
+
+    for (uint_fast16_t i = 1; i <= 10; ++i) {
+        printf("[");
+        uint_fast32_t* result = find_best_set(i,false);
+        for (uint_fast16_t j = 0; j < i; j++) {
+            printf(" %"PRIuFAST32",", result[j]);
+        }
+
+        FREE(result);
+        printf(" ]\n");
+    }
+
+
+    /*
+    uint_fast32_t* result = find_best_set(5,true);
+    FREE(result);
+    */
     return 0;
 }
 

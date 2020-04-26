@@ -218,7 +218,7 @@ class difference_report {
                     this.find_next_gap();
 
                     // if is the last one then the difference is the last one +1
-                    if (this.gap !== this.differences.length - 1) {
+                    if (this.gap === this.differences.length - 1) {
                         this.current_difference = this.differences.slice(-1)[0] + 1;
                     }
 
@@ -265,6 +265,8 @@ function find_possible_set(set_end, end_sums, end_multiplications, end_differenc
     // while an structure wasn't found
     let searched_index = searched_length - 1;
     while (searched_index >= 0) {
+
+        // console.log(`index: ${searched_index}, number: ${searched_number}`);
 
         // if the number is lower than the lower bound and is the first searched
         const is_less_than_lower_bound = searched_number < 1 + lower_bound;
@@ -398,8 +400,6 @@ function find_best_set(set_length, only_first = true) {
                 search_number++;
                 continue;
             }
-
-            //console.log(search_number,searched_set)
 
             const current_sums = mergeAll(sums, searched_sums);
             const current_multiplications = mergeAll(multiplications, searched_multiplications);
@@ -579,10 +579,7 @@ const found_set = find_possible_set(tested_set, s, m, d, 12);
 console.log([...found_set, ...tested_set]);
 */
 
-console.log(find_best_set(3));
-/*for (let i = 1; i <= 11; i++) {
-    console.time('someFunction');
+for (let i = 1; i <= 10; i++) {
     console.log(find_best_set(i, false));
-    console.timeEnd('someFunction');
-}*/
-// console.log(find_best_set(10));
+}
+//console.log(find_possible_set([31, 32],[31*2, 31+32, 32*2],[31*31, 31*32, 32*32],[1],7));
