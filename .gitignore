@@ -1,1 +1,3 @@
 cmake-build-debug/
+main_algorithm.js
+main_algorithm.wasm

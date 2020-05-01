@@ -539,7 +539,7 @@ console.time('someFunction');
 */
 /*
 for (let j = 1; j <= 10; j++) {
-    const lower = find_lower_bound(j-1);
+    const lower = find_lower_bound_difference(j-1);
     console.log("\n", j, lower)
     for (let i = lower; i <= 100; i++) {
         const found_set = find_possible_set([i], [i * 2], [i * i], [], j)
@@ -551,7 +551,34 @@ for (let j = 1; j <= 10; j++) {
             console.log(found_set, j, i);
         }
     }
-}*/
+}
+*/
+/*
+let g = 0
+function brute_Force_recursive(max_lenght, index, prev) {
+    if (index == 0){
+        return prev;
+    }
+    for (let i = prev[index]-1; i > 0; i--) {
+        g++
+        const current_set = [...prev];
+        current_set[index-1]=i;
+        // console.log(current_set);
+        const set_part = current_set.slice(index-1);
+        const set_correctness = is_set_correct(set_part);
+        if (set_correctness){
+            const next_set = brute_Force_recursive(max_lenght,index-1,current_set);
+            if (next_set){
+                return next_set;
+            }
+        }
+    }
+    return null;
+}
+
+let a = brute_Force_recursive(8,7,[ 0, 0, 0, 0, 0, 0, 0, 38 ])
+console.log(a);
+*/
 /*
 const tested_set = [109];
 let s = [];
@@ -579,7 +606,20 @@ const found_set = find_possible_set(tested_set, s, m, d, 12);
 console.log([...found_set, ...tested_set]);
 */
 
-for (let i = 1; i <= 10; i++) {
+/*for (let i = 1; i <= 10; i++) {
     console.log(find_best_set(i, false));
-}
+}*/
+
 //console.log(find_possible_set([31, 32],[31*2, 31+32, 32*2],[31*31, 31*32, 32*32],[1],7));
+
+function javascript_algorithm_fast(set_length) {
+    best_found = find_best_set(set_length,true);
+    console.log("JS",best_found);
+    return best_found;
+}
+
+function javascript_algorithm_complete(set_length) {
+    best_found = find_best_set(set_length,false);
+    console.log("JS",est_found);
+    return best_found;
+}

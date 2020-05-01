@@ -366,7 +366,7 @@ void find_possible_set(
     uint_fast32_t current_difference = find_next_available_difference(current_difference_report);
 
     uint_fast32_t previous_number = set_end[0];
-    int_fast64_t searched_number = previous_number - current_difference;
+    int_fast32_t searched_number = previous_number - current_difference;
 
     // get the starting lower bound
     int_fast64_t lower_bound = find_lower_bound_difference(
@@ -377,7 +377,7 @@ void find_possible_set(
     // while an structure wasn't found
     int_fast64_t searched_index = searched_length - 1;
     while (searched_index >= 0) {
-        // printf("index: %" PRIdFAST64", number: %" PRIdFAST64"\n",searched_index,searched_number);
+        // printf("index: %" PRIdFAST64", number: %" PRIdFAST32", lower bound: %"PRIdFAST64"\n",searched_index,searched_number,lower_bound+1);
 
         // if the number is lower than the lower bound and is the first searched
         const bool is_less_than_lower_bound = searched_number < 1 + lower_bound;
@@ -563,6 +563,7 @@ void find_possible_set(
 
 // find_best_set inputs the length of the set and outputs the
 // best set, the one with the lower highest number for that length
+
 uint_fast32_t *find_best_set(uint_fast16_t set_length, bool only_first) {
 
     // create the structures to contain the set, the sums, and the differences
@@ -667,10 +668,13 @@ uint_fast32_t *find_best_set(uint_fast16_t set_length, bool only_first) {
             if (current_search_report.possible_set_found) {
 
                 if (only_first) {
-                    for (uint_fast16_t found_i = 0; found_i < set_length; ++found_i) {
+                    for (uint_fast16_t found_i = 0; found_i < set_length-1; ++found_i) {
                         const uint_fast32_t found_element = current_search_report.possible_set[found_i];
+                        printf(" %"PRIuFAST32",",found_element);
                         searched_set[found_i] = found_element;
                     }
+                    searched_set[set_length-1] = searched_number;
+
                     return searched_set;
                 }
 
@@ -697,52 +701,40 @@ uint_fast32_t *find_best_set(uint_fast16_t set_length, bool only_first) {
     return searched_set;
 }
 
+void c_algorithm_fast(uint32_t *data, uint_fast16_t data_length) {
+  uint_fast32_t * best_set = find_best_set(data_length, true);
+
+  for(uint_fast16_t i=0; i < data_length; i++){
+      // printf(" %"PRIuFAST32",", best_set[i]);
+      data[i] = best_set[i];
+  }
+  // printf("\n");
+
+  free(best_set);
+}
+
+void c_algorithm_complete(uint32_t *data, uint_fast16_t data_length) {
+  uint_fast32_t * best_set = find_best_set(data_length, false);
+
+  for(uint_fast16_t i=0; i < data_length; i++){
+      // printf(" %"PRIuFAST32",", best_set[i]);
+      data[i] = best_set[i];
+  }
+  // printf("\n");
+
+  free(best_set);
+}
 
 // The final sets are 16 bits, the products are 32.
 // the length of the arrays are 16 bits.
 
+/*
 int main() {
-    printf("Hello, World!\n");
-
-    /*
-    possible_set_report report = {
-            .possible_set_found=false,
-            .possible_set=(uint_fast16_t[7]) {0, 0, 0, 0, 0, 0, 0},
-    };
-    uint_fast16_t set_end[2] = {31, 32};
-    uint_fast32_t end_sums[3] = {31*2, 31+32, 32*2};
-    uint_fast32_t end_multiplications[3] = {31*31, 31*32, 32*32};
-    uint_fast32_t end_differences[1] = {1};
-    uint_fast16_t end_length = 2;
-    uint_fast16_t final_length = 7;
-
-    find_possible_set(
-            &report,
-            set_end,
-            end_sums,
-            end_multiplications,
-            end_differences,
-            end_length,
-            final_length
-    );*/
-
-
-    for (uint_fast16_t i = 1; i <= 10; ++i) {
-        printf("[");
-        uint_fast32_t* result = find_best_set(i,false);
-        for (uint_fast16_t j = 0; j < i; j++) {
-            printf(" %"PRIuFAST32",", result[j]);
-        }
-
-        FREE(result);
-        printf(" ]\n");
+    uint32_t best_set[10];
+    for(uint32_t i=0; i < 10; i++){
+        best_set[i] = i;
     }
-
-
-    /*
-    uint_fast32_t* result = find_best_set(5,true);
-    FREE(result);
-    */
+    c_algorithm_fast(best_set, 5);
     return 0;
 }
-
+ */
