@@ -1,115 +1,159 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Title of the document</title>
-<link rel="stylesheet" href="styles.css">
-<script type="text/javascript" src="main_algorithm.js"></script>
+    <meta charset="UTF-8">
+    <title>Title of the document</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="main_algorithm.js"></script>
     <script type="text/javascript" src="javascript_algorithm.js"></script>
+    <script type="text/javascript" src="fill_ui.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </head>
 
 <body>
 
-        <div class="div-1a">
-            <div><button onclick="call_c_algorithm(1)" class="boton-personalizado-1">c1</button></div>
-            <div><button onclick="call_c_algorithm(2)" class="boton-personalizado-1">c2</button></div>
-            <div><button onclick="call_c_algorithm(3)" class="boton-personalizado-1">c3</button></div>
-            <div><button onclick="call_c_algorithm(4)" class="boton-personalizado-1">c4</button></div>
-            <div><button onclick="call_c_algorithm(5)" class="boton-personalizado-1">c5</button></div>
-            <div><button onclick="call_c_algorithm(6)" class="boton-personalizado-1">c6</button></div>
-            <div><button onclick="call_c_algorithm(7)" class="boton-personalizado-1">c7</button></div>
-            <div><button onclick="call_c_algorithm(8)" class="boton-personalizado-1">c8</button></div>
-            <div><button onclick="call_c_algorithm(9)" class="boton-personalizado-1">c9</button></div>
-            <div><button onclick="call_c_algorithm(10)" class="boton-personalizado-1">c10</button></div>
-            <div><button onclick="call_c_algorithm(11)" class="boton-personalizado-1">c11</button></div>
+<div class="div-1a">
+    <div>
+        <button onclick="call_c_algorithm(1)" class="boton-personalizado-1">c1</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(2)" class="boton-personalizado-1">c2</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(3)" class="boton-personalizado-1">c3</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(4)" class="boton-personalizado-1">c4</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(5)" class="boton-personalizado-1">c5</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(6)" class="boton-personalizado-1">c6</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(7)" class="boton-personalizado-1">c7</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(8)" class="boton-personalizado-1">c8</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(9)" class="boton-personalizado-1">c9</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(10)" class="boton-personalizado-1">c10</button>
+    </div>
+    <div>
+        <button onclick="call_c_algorithm(11)" class="boton-personalizado-1">c11</button>
+    </div>
 
-        </div>
+</div>
 
-        <div class="div-1a">
-            <div><button onclick="call_javascript_algorithm(1)" class="boton-personalizado-2">js1</button></div>
-            <div><button onclick="call_javascript_algorithm(2)" class="boton-personalizado-2">js2</button></div>
-            <div><button onclick="call_javascript_algorithm(3)" class="boton-personalizado-2">js3</button></div>
-            <div><button onclick="call_javascript_algorithm(4)" class="boton-personalizado-2">js4</button></div>
-            <div><button onclick="call_javascript_algorithm(5)" class="boton-personalizado-2">js5</button></div>
-            <div><button onclick="call_javascript_algorithm(6)" class="boton-personalizado-2">js6</button></div>
-            <div><button onclick="call_javascript_algorithm(7)" class="boton-personalizado-2">js7</button></div>
-            <div><button onclick="call_javascript_algorithm(8)" class="boton-personalizado-2">js8</button></div>
-            <div><button onclick="call_javascript_algorithm(9)" class="boton-personalizado-2">js9</button></div>
-            <div><button onclick="call_javascript_algorithm(10)" class="boton-personalizado-2">js10</button></div>
-            <div><button onclick="call_javascript_algorithm(11)" class="boton-personalizado-2">js11</button></div>
-            
-        </div>
+<div class="div-1a">
+    <div>
+        <button onclick="call_javascript_algorithm(1)" class="boton-personalizado-2">js1</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(2)" class="boton-personalizado-2">js2</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(3)" class="boton-personalizado-2">js3</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(4)" class="boton-personalizado-2">js4</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(5)" class="boton-personalizado-2">js5</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(6)" class="boton-personalizado-2">js6</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(7)" class="boton-personalizado-2">js7</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(8)" class="boton-personalizado-2">js8</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(9)" class="boton-personalizado-2">js9</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(10)" class="boton-personalizado-2">js10</button>
+    </div>
+    <div>
+        <button onclick="call_javascript_algorithm(11)" class="boton-personalizado-2">js11</button>
+    </div>
 
-        <div class="div-2a">
-          <span id="1-c" class="texto"> Tiempo en Wasm: - </span> 
-            <br>
-        <span id="1-js" class="texto">  Tienmpo en js: - </span> 
-        </div>
-        <div class="div-2a">
-            <span id="2-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="2-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="3-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="3-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div  class="div-2a">
-            <span id="4-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="4-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="5-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span  id="5-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="6-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="6-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="7-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="7-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="8-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="8-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="9-c" class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="9-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="10-c"class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="10-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
-          <div class="div-2a">
-            <span id="11-c"class="texto"> Tiempo en Wasm: - </span> 
-              <br>
-          <span id="11-js" class="texto">  Tienmpo en js: - </span> 
-          </div>
+</div>
+
+<div class="div-2a">
+    <span id="1-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="1-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="2-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="2-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="3-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="3-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="4-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="4-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="5-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="5-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="6-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="6-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="7-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="7-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="8-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="8-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="9-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="9-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="10-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="10-js" class="texto">  Tienmpo en js: - </span>
+</div>
+<div class="div-2a">
+    <span id="11-c" class="texto"> Tiempo en Wasm: - </span>
+    <br>
+    <span id="11-js" class="texto">  Tienmpo en js: - </span>
+</div>
 <br>
-          <div class="consola">
-              <div id="console-content">$ console</div>
-              <div class="switch">
-                <div><button onclick="fazt_or_complete(false)" class="boton-personalizado-3">fazt</button></div>
-                <div><button onclick="fazt_or_complete(true)" class="boton-personalizado-3">complete</button></div>
-              </div>
-          </div>
-          <br>
+<div class="consola">
+    <div id="console-content">$ console</div>
+    <div class="switch">
+        <div>
+            <button onclick="fast_or_complete(false)" class="boton-personalizado-3">fast</button>
+        </div>
+        <div>
+            <button onclick="fast_or_complete(true)" class="boton-personalizado-3">complete</button>
+        </div>
+    </div>
+</div>
 
-          <!-- <div class="switch">
-          <div><button onclick="fazt_or_complete(false)" class="boton-personalizado-1">fazt</button></div>
-          <div><button onclick="fazt_or_complete(true)" class="boton-personalizado-1">complete</button></div>
-        </div> -->
 </body>
 
 </html>

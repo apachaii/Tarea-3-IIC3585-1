@@ -701,14 +701,15 @@ uint_fast32_t *find_best_set(uint_fast16_t set_length, bool only_first) {
     return searched_set;
 }
 
+// The final sets are 16 bits, the products are 32.
+// the length of the arrays are 16 bits.
+
 void c_algorithm_fast(uint32_t *data, uint_fast16_t data_length) {
   uint_fast32_t * best_set = find_best_set(data_length, true);
 
   for(uint_fast16_t i=0; i < data_length; i++){
-      // printf(" %"PRIuFAST32",", best_set[i]);
       data[i] = best_set[i];
   }
-  // printf("\n");
 
   free(best_set);
 }
@@ -717,24 +718,8 @@ void c_algorithm_complete(uint32_t *data, uint_fast16_t data_length) {
   uint_fast32_t * best_set = find_best_set(data_length, false);
 
   for(uint_fast16_t i=0; i < data_length; i++){
-      // printf(" %"PRIuFAST32",", best_set[i]);
       data[i] = best_set[i];
   }
-  // printf("\n");
 
   free(best_set);
 }
-
-// The final sets are 16 bits, the products are 32.
-// the length of the arrays are 16 bits.
-
-/*
-int main() {
-    uint32_t best_set[10];
-    for(uint32_t i=0; i < 10; i++){
-        best_set[i] = i;
-    }
-    c_algorithm_fast(best_set, 5);
-    return 0;
-}
- */

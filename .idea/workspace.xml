@@ -12,11 +12,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc4bb596-5ab5-4512-b433-320759f09b74" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/compile.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/app.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/javascript_algorithm.js" beforeDir="false" afterPath="$PROJECT_DIR$/javascript_algorithm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/c_algorithm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +27,13 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -42,8 +49,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
   </component>
-  <component name="RunManager" selected="CMake Application.c_algorithm">
+  <component name="RunManager" selected="Node.js.javascript_algorithm.js">
     <configuration name="c_algorithm" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="c_algorithm" TARGET_NAME="c_algorithm" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="c_algorithm" RUN_TARGET_NAME="c_algorithm">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -53,7 +61,7 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="CMake Application.c_algorithm" />
+      <item itemvalue="Node.js.javascript_algorithm.js" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -88,6 +96,7 @@
       <workItem from="1588346291895" duration="31000" />
       <workItem from="1588350484549" duration="992000" />
       <workItem from="1588356824746" duration="437000" />
+      <workItem from="1588522914248" duration="5458000" />
     </task>
     <servers />
   </component>
@@ -115,29 +124,29 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="167" y="125" width="1099" height="543" key="DiffContextDialog/67.27.1299.741@67.27.1299.741" timestamp="1587772788617" />
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1588346315889">
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1588522910901">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1588346315889" />
-    <state width="1253" height="293" key="GridCell.Tab.0.bottom" timestamp="1588357261624">
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1588522910901" />
+    <state width="1276" height="175" key="GridCell.Tab.0.bottom" timestamp="1588534412311">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state width="1253" height="293" key="GridCell.Tab.0.bottom/67.27.1299.741@67.27.1299.741" timestamp="1588357261624" />
+    <state width="1276" height="175" key="GridCell.Tab.0.bottom/67.27.1299.741@67.27.1299.741" timestamp="1588534412311" />
     <state width="1807" height="190" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1587954595204" />
-    <state width="1253" height="293" key="GridCell.Tab.0.center" timestamp="1588357261623">
+    <state width="1276" height="175" key="GridCell.Tab.0.center" timestamp="1588534412311">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state width="1253" height="293" key="GridCell.Tab.0.center/67.27.1299.741@67.27.1299.741" timestamp="1588357261623" />
+    <state width="1276" height="175" key="GridCell.Tab.0.center/67.27.1299.741@67.27.1299.741" timestamp="1588534412311" />
     <state width="1807" height="190" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1587954595203" />
-    <state width="1253" height="293" key="GridCell.Tab.0.left" timestamp="1588357261622">
+    <state width="1276" height="175" key="GridCell.Tab.0.left" timestamp="1588534412310">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state width="1253" height="293" key="GridCell.Tab.0.left/67.27.1299.741@67.27.1299.741" timestamp="1588357261622" />
+    <state width="1276" height="175" key="GridCell.Tab.0.left/67.27.1299.741@67.27.1299.741" timestamp="1588534412310" />
     <state width="1807" height="190" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1587954595203" />
-    <state width="1253" height="293" key="GridCell.Tab.0.right" timestamp="1588357261624">
+    <state width="1276" height="175" key="GridCell.Tab.0.right" timestamp="1588534412311">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state width="1253" height="293" key="GridCell.Tab.0.right/67.27.1299.741@67.27.1299.741" timestamp="1588357261624" />
+    <state width="1276" height="175" key="GridCell.Tab.0.right/67.27.1299.741@67.27.1299.741" timestamp="1588534412311" />
     <state width="1807" height="190" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1587954595204" />
     <state width="1253" height="252" key="GridCell.Tab.1.bottom" timestamp="1587954595195">
       <screen x="67" y="27" width="1853" height="1053" />
@@ -203,10 +212,14 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="-102" y="147" width="934" height="576" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/67.27.1299.741@67.27.1299.741" timestamp="1587952468231" />
-    <state x="407" y="137" width="640" height="518" key="find.popup" timestamp="1587767471230">
+    <state x="407" y="137" width="640" height="522" key="find.popup" timestamp="1588520177204">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="407" y="137" width="640" height="518" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1587767471230" />
+    <state x="407" y="137" width="640" height="522" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1588520177204" />
+    <state x="380" y="175" key="run.anything.popup" timestamp="1588534193312">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="380" y="175" key="run.anything.popup/67.27.1299.741@67.27.1299.741" timestamp="1588534193312" />
     <state x="379" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1587760188139">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
@@ -220,11 +233,6 @@
           <url>file://$PROJECT_DIR$/javascript_algorithm.js</url>
           <line>271</line>
           <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/javascript_algorithm.js</url>
-          <line>559</line>
-          <option name="timeStamp" value="65" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
