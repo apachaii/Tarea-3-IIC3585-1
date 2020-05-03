@@ -6,6 +6,7 @@
 
     <script type="text/javascript" src="main_algorithm.js"></script>
     <script type="text/javascript" src="javascript_algorithm.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
 <button value="process1" onclick="c_algorithm_fast(1)">C  1</button>
@@ -29,49 +30,7 @@
 <button value="process8" onclick="javascript_algorithm_fast(8)">JS 8</button>
 <button value="process9" onclick="javascript_algorithm_fast(9)">JS 9</button>
 <button value="process10" onclick="javascript_algorithm_fast(10)">JS10</button>
-<script>
-    const find_best_algorithms = {}
-    Module.onRuntimeInitialized = async _ => {
-        find_best_algorithms.fast = Module.cwrap(
-            'c_algorithm_fast', null, ['number', 'number']
-        );
-        find_best_algorithms.complete = Module.cwrap(
-            'c_algorithm_complete', null, ['number', 'number']
-        );
-    };
-
-    function execute_algorithm(find_best,set_length) {
-
-        // Create example data to test float_multiply_array
-        let data = new Uint32Array(set_length);
-
-        // Get data byte size, allocate memory on Emscripten heap, and get pointer
-        let nDataBytes = data.length * data.BYTES_PER_ELEMENT;
-        //Module.TOTAL_MEMORY = nDataBytes; // added by jo
-        let dataPtr = Module._malloc(nDataBytes);
-
-        // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
-        let dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
-        dataHeap.set(new Uint8Array(data.buffer));
-
-        // Call function and get result
-        find_best(dataHeap.byteOffset, set_length);
-        let best_found = new Uint32Array(dataHeap.buffer, dataHeap.byteOffset, data.length);
-
-        // Free memory
-        Module._free(dataHeap.byteOffset);
-
-        console.log("C",best_found);
-        return best_found;
-    }
-
-    function c_algorithm_fast(set_length) {
-        return execute_algorithm(find_best_algorithms.fast,set_length)
-    }
-
-    function c_algorithm_complete(set_length) {
-        return execute_algorithm(find_best_algorithms.complete,set_length)
-    }
+<script>   
 </script>
 
 </body>

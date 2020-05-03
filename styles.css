@@ -1,0 +1,91 @@
+.boton-personalizado-1 {
+  text-decoration:none;
+  font-weight: 600;
+  font-size: 20px;
+  color:white;
+  padding-top:15px;
+  padding-bottom:15px;
+  padding-left:40px;
+  padding-right:40px;
+  background-color: #2B2A2A ;
+  border-width: 3px;
+  border-style: solid;
+  border-radius:35px;
+  margin-top: 2%;
+  width: 120px;
+  height: 60px;
+  align-content: center !important;
+  }
+
+  .boton-personalizado-2 {
+    text-decoration:none;
+    font-weight: 600;
+    font-size: 20px;
+    color:white;
+    padding-top:15px;
+    padding-bottom:15px;
+    padding-left:40px;
+    padding-right:40px;
+    background-color: #2B2A2A ;
+    border-width: 3px;
+    border-style: solid;
+    border-radius:35px;
+    margin-top: 2%;
+    width: 120px;
+    height: 60px;
+    align-content: center !important;
+    }
+    .boton-personalizado-3 {
+      text-decoration:none;
+      font-weight: 600;
+      font-size: 20px;
+      color:white;
+      padding-top:15px;
+      padding-bottom:15px;
+      padding-left:40px;
+      padding-right:40px;
+      background-color: #2B2A2A ;
+      border-width: 3px;
+      border-style: solid;
+      border-radius:35px;
+      margin-top: 5%;
+      width: 165px;
+      height: 60px;
+      align-content: center !important;
+      }
+.div-1a {
+  margin-left: 5%;
+  float:left;
+  width:190px;
+}
+
+.div-2a {
+  margin-top: 1.3%;
+  float:left;
+  width:190px;
+}
+.texto{
+color: gray;
+font-style: oblique;
+font-size: large;
+}
+
+.consola{
+  margin-left: 45%;
+  margin-top: 12%;
+  border: solid #E1E1E1;
+  width: 600px;
+  height: 400px;
+  background-color: #2B2A2A;
+  color: white;
+}
+
+#console-content{
+    margin-left: 2%;
+    margin-top: 1%;
+    
+}
+
+.switch{
+  margin-left: 120%;
+}

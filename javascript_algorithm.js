@@ -484,15 +484,12 @@ function is_set_correct(tested_set) {
 // const cosa1=find_best_set(11);
 /*const cosa1=[ 3, 5, 8, 9 ];
 console.log(cosa1);
-
 let s = [];
 let m = [];
 for (let i = 0; i < cosa1.length; i++) {
-
     for (let j = i; j < cosa1.length; j++) {
         const one = cosa1[i];
         const two = cosa1[j];
-
         s.push(one+two);
         m.push(one*two);
     }
@@ -505,11 +502,9 @@ console.log(find_duplicate_in_array(mergeAll(s,m)));
 
 /*
 console.time('someFunction')
-
 for (let i = 1; i <= 10; i++) {
     console.log(find_best_set(i));
 }
-
 console.timeEnd('someFunction')*/
 
 /*for (let i = 30; i <= 50; i++) {
@@ -518,24 +513,17 @@ console.timeEnd('someFunction')*/
 
 /*
 console.time('someFunction')
-
 for (let i = 1; i <= 10; i++) {
     console.log(find_best_set(i));
 }
-
 console.timeEnd('someFunction')
 */
 /*console.time('someFunction')
-
 for (let i = 1; i <= 10; i++) {
     console.log(find_best_set(i, false));
 }
-
 console.timeEnd('someFunction')
-
-
 console.time('someFunction');
-
 */
 /*
 for (let j = 1; j <= 10; j++) {
@@ -543,7 +531,6 @@ for (let j = 1; j <= 10; j++) {
     console.log("\n", j, lower)
     for (let i = lower; i <= 100; i++) {
         const found_set = find_possible_set([i], [i * 2], [i * i], [], j)
-
         if (found_set) {
             const it_works = is_set_correct([...found_set, i]);
             console.log([...found_set, i], j, i, it_works);
@@ -575,7 +562,6 @@ function brute_Force_recursive(max_lenght, index, prev) {
     }
     return null;
 }
-
 let a = brute_Force_recursive(8,7,[ 0, 0, 0, 0, 0, 0, 0, 38 ])
 console.log(a);
 */
@@ -585,14 +571,12 @@ let s = [];
 let m = [];
 let d = []
 for (let i = 0; i < tested_set.length; i++) {
-
     for (let j = i; j < tested_set.length; j++) {
         const one = tested_set[i];
         const two = tested_set[j];
         if (j !== i){
             d.push(two-one);
         }
-
         s.push(one + two);
         m.push(one * two);
     }
@@ -600,7 +584,6 @@ for (let i = 0; i < tested_set.length; i++) {
     m.sort((a, b) => a - b);
     d.sort((a, b) => a - b);
 }
-
 console.log(find_best_set(12, false));
 const found_set = find_possible_set(tested_set, s, m, d, 12);
 console.log([...found_set, ...tested_set]);
@@ -613,13 +596,28 @@ console.log([...found_set, ...tested_set]);
 //console.log(find_possible_set([31, 32],[31*2, 31+32, 32*2],[31*31, 31*32, 32*32],[1],7));
 
 function javascript_algorithm_fast(set_length) {
-    best_found = find_best_set(set_length,true);
-    console.log("JS",best_found);
-    return best_found;
+    return find_best_set(set_length,true);
 }
 
 function javascript_algorithm_complete(set_length) {
-    best_found = find_best_set(set_length,false);
-    console.log("JS",est_found);
-    return best_found;
+    return find_best_set(set_length,false);
 }
+
+function switch_to_html_js(set_length,function_value,time_of_function,type_of_value){
+    document.getElementById("console-content").innerText = `$ Js/${type_of_value} (${set_length}): ${function_value}`  
+    document.getElementById(`${set_length}-js`).innerText = `Tiempo en js: ${time_of_function.toFixed(4)}` 
+}
+
+function time_and_change_js(function_of,set_length,type_of_value,bool){
+    startTime = performance.now();
+    let func_execute_algorithm_complete = function_of(set_length,bool) 
+    endTime = performance.now();
+    time = (endTime - startTime)/1000
+    switch_to_html_js(set_length,func_execute_algorithm_complete,time,type_of_value)  
+}
+
+function call_javascript_algorithm(set_length){
+    type_of === true ? time_and_change_js(javascript_algorithm_complete,set_length,"complete",false) : time_and_change_js(javascript_algorithm_fast,set_length,"fast",true) 
+}
+
+
